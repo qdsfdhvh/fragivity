@@ -8,7 +8,7 @@ import com.github.fragivity.navigator
 import com.github.fragivity.pop
 import kotlinx.android.synthetic.main.title_bar.*
 
-abstract class AbsBaseFragment(private val _supportBack: Boolean = true) : Fragment() {
+abstract class AbsBaseFragment : Fragment() {
 
     companion object {
         const val TAG = "Fragivity"
@@ -22,7 +22,7 @@ abstract class AbsBaseFragment(private val _supportBack: Boolean = true) : Fragm
         super.onViewCreated(view, savedInstanceState)
         Log.e(TAG, "onViewCreated:" + this.javaClass.simpleName)
         title_name?.text = titleName
-        if (_supportBack == true) {
+        if (supportBack) {
             title_back?.let {
                 it.visibility = View.VISIBLE
                 it.setOnClickListener {
@@ -68,6 +68,8 @@ abstract class AbsBaseFragment(private val _supportBack: Boolean = true) : Fragm
         super.onDestroyView()
         Log.e(TAG, "onDestroyView:" + this.javaClass.simpleName)
     }
+
+    protected open val supportBack: Boolean = true
 
     protected abstract val titleName: String?
 

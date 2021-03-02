@@ -17,9 +17,11 @@ import com.github.fragivity.example.swipeback.SwipeBackFragment
 import com.github.fragivity.finish
 import com.github.fragivity.navigator
 import com.github.fragivity.push
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : AbsBaseFragment(false) {
+@AndroidEntryPoint
+class HomeFragment : AbsBaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +69,8 @@ class HomeFragment : AbsBaseFragment(false) {
             navigator.push(NestedFragment::class)
         }
     }
+
+    override val supportBack: Boolean = false
 
     override var titleName: String?
         get() = "Fragivity"

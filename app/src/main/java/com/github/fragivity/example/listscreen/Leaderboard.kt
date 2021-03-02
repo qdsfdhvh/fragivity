@@ -27,10 +27,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.fragivity.*
 import com.github.fragivity.example.AbsBaseFragment
 import com.github.fragivity.example.R
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Shows a static leaderboard with multiple users.
  */
+@AndroidEntryPoint
 class Leaderboard : AbsBaseFragment() {
     override val titleName: String? = null
 

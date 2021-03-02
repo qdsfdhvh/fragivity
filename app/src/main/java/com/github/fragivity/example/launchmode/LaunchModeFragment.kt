@@ -9,8 +9,10 @@ import com.github.fragivity.*
 import com.github.fragivity.example.AbsBaseFragment
 import com.github.fragivity.example.HomeFragment
 import com.github.fragivity.example.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_launch_mode.*
 
+@AndroidEntryPoint
 class LaunchModeFragment : AbsBaseFragment() {
 
     override fun onCreateView(
