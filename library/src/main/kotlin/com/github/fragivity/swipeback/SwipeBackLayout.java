@@ -36,8 +36,7 @@ import java.util.Objects;
 
 /**
  * Thx https://github.com/ikew0ng/SwipeBackLayout
- * & https://github.com/YoKeyword/Fragmentation
- * <p>
+ *     https://github.com/YoKeyword/Fragmentation
  */
 public class SwipeBackLayout extends FrameLayout {
     /**
