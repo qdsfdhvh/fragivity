@@ -27,7 +27,7 @@ private val _ViewNavHostMap = mutableMapOf<View, MyNavHost>()
 val Fragment.navigator: MyNavHost
     get() {
         return _fragNavHostMap.getOrPut(this) {
-            MyNavHost(requireContext(), NavHost {
+            MyNavHost(requireActivity(), NavHost {
                 if (this is NavHostFragment) navController
                 else requireParentFragment().findNavController()
             }).apply {//make sure the fragment in back stack
