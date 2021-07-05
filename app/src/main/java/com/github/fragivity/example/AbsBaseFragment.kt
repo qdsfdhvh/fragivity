@@ -14,15 +14,14 @@ abstract class AbsBaseFragment(private val _supportBack: Boolean = true) : Fragm
         const val TAG = "Fragivity"
     }
 
-    @Suppress("DEPRECATION")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        Log.e(TAG, "onActivityCreated:" + this.javaClass.simpleName)
-    }
+    private val key: String
+        get() = "${this.javaClass.simpleName}@${
+            Integer.toHexString(System.identityHashCode(this))
+        }"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e(TAG, "onViewCreated:" + this.javaClass.simpleName)
+        Log.e(TAG, "onViewCreated:$key")
         view.findViewById<TextView>(R.id.title_name)?.text = titleName
         if (_supportBack) {
             view.findViewById<TextView>(R.id.title_back)?.let {
@@ -36,38 +35,38 @@ abstract class AbsBaseFragment(private val _supportBack: Boolean = true) : Fragm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e(TAG, "onCreate:" + this.javaClass.simpleName)
+        Log.e(TAG, "onCreate:$key")
     }
 
     override fun onStart() {
         super.onStart()
-        Log.e(TAG, "onStart:" + this.javaClass.simpleName)
+        Log.e(TAG, "onStart:$key")
     }
 
     override fun onResume() {
         super.onResume()
-        Log.e(TAG, "onResume:" + this.javaClass.simpleName)
+        Log.e(TAG, "onResume:$key")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.e(TAG, "onPause:" + this.javaClass.simpleName)
+        Log.e(TAG, "onPause:$key")
     }
 
     override fun onStop() {
         super.onStop()
-        Log.e(TAG, "onStop:" + this.javaClass.simpleName)
+        Log.e(TAG, "onStop:$key")
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e(TAG, "onDestroy:" + this.javaClass.simpleName)
+        Log.e(TAG, "onDestroy:$key")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.e(TAG, "onDestroyView:" + this.javaClass.simpleName)
+        Log.e(TAG, "onDestroyView:$key")
     }
 
     protected abstract val titleName: String?

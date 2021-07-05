@@ -28,32 +28,34 @@ class FragivityFragmentNavigator(
 
     init {
         // Need to cooperate with ReportFragmentManager
-        if (fragmentManager is ReportFragmentManager) {
-            fragmentManager.addOnBackStackChangedListener {
-                if (mIsPendingAddToBackStackOperation) {
-                    mIsPendingAddToBackStackOperation = !isBackStackEqual()
-                    val size = fragmentManager.fragments.size
-                    if (size > 1) {
-                        // 切到后台时的生命周期
-                        val fragment = fragmentManager.fragments[size - 2]
-                        // fragment onResume -> onStop
-                        fragmentManager.moveToState(fragment, Fragment.ACTIVITY_CREATED)
-                        fragment.mState = Fragment.STARTED
-                        fragment.mMaxState = Lifecycle.State.STARTED
-                    }
-                } else if (mIsPendingPopBackStackOperation) {
-                    mIsPendingPopBackStackOperation = !isBackStackEqual()
-                    // 回到前台时的生命周期
-                    val fragment = fragmentManager.primaryNavigationFragment
-                        ?: return@addOnBackStackChangedListener
-                    // fragment (true) ?: onStart : onCreateView -> onResume
-                    if (fragment.mState == Fragment.STARTED) {
-                        fragment.mState = Fragment.ACTIVITY_CREATED
-                    }
-                    setMaxLifecycle(fragment, Lifecycle.State.RESUMED)
+//        if (fragmentManager is ReportFragmentManager) {
+        fragmentManager.addOnBackStackChangedListener {
+            if (mIsPendingAddToBackStackOperation) {
+                mIsPendingAddToBackStackOperation = !isBackStackEqual()
+                val size = fragmentManager.fragments.size
+                if (size > 1) {
+                    // 切到后台时的生命周期
+                    val fragment = fragmentManager.fragments[size - 2]
+                    // fragment onResume -> onStop
+                    moveFragmentState(fragmentManager, fragment, Fragment.ACTIVITY_CREATED)
+                    setFragmentState(fragmentManager, fragment, Fragment.STARTED)
+                    fragment.mMaxState = Lifecycle.State.STARTED
+                }
+            } else if (mIsPendingPopBackStackOperation) {
+                mIsPendingPopBackStackOperation = !isBackStackEqual()
+                // 回到前台时的生命周期
+                val fragment = fragmentManager.primaryNavigationFragment
+                    ?: return@addOnBackStackChangedListener
+
+                // fragment onStop -> onResume
+                if (fragment.mState == Fragment.STARTED) {
+                    fragment.mMaxState = Lifecycle.State.RESUMED
+                    fragment.mState = Fragment.ACTIVITY_CREATED
+                    moveFragmentState(fragmentManager, fragment, Fragment.RESUMED)
                 }
             }
         }
+//        }
     }
 
     override fun createDestination(): FragmentNavigator.Destination {
@@ -113,8 +115,8 @@ class FragivityFragmentNavigator(
         ft.setPrimaryNavigationFragment(fragment)
 
         val isSingleTopReplacement = !initialNavigation
-            && navOptions != null && navOptions.shouldLaunchSingleTop()
-            && backStack.last() == destId
+                && navOptions != null && navOptions.shouldLaunchSingleTop()
+                && backStack.last() == destId
 
         // when popsSelf == true close preFrag as SingleTop
         // see https://github.com/vitaviva/fragivity/issues/26
@@ -175,17 +177,17 @@ class FragivityFragmentNavigator(
         if (split.size != 2) {
             throw IllegalStateException(
                 "Invalid back stack entry on the "
-                    + "NavHostFragment's back stack - use getChildFragmentManager() "
-                    + "if you need to do custom FragmentTransactions from within "
-                    + "Fragments created via your navigation graph."
+                        + "NavHostFragment's back stack - use getChildFragmentManager() "
+                        + "if you need to do custom FragmentTransactions from within "
+                        + "Fragments created via your navigation graph."
             )
         }
         return split[1].toIntOrNull()
             ?: throw java.lang.IllegalStateException(
                 "Invalid back stack entry on the "
-                    + "NavHostFragment's back stack - use getChildFragmentManager() "
-                    + "if you need to do custom FragmentTransactions from within "
-                    + "Fragments created via your navigation graph."
+                        + "NavHostFragment's back stack - use getChildFragmentManager() "
+                        + "if you need to do custom FragmentTransactions from within "
+                        + "Fragments created via your navigation graph."
             )
     }
 

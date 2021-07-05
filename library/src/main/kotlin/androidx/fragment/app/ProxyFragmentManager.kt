@@ -11,7 +11,7 @@ internal class ReportFragmentManager : FragmentManager() {
     override fun dispatchStart() {
         forEachBackFragment { fragment ->
             if (fragment.mState == Fragment.ACTIVITY_CREATED) {
-                fragment.mState = Fragment.STARTED
+                setFragmentState(this, fragment, Fragment.STARTED)
             }
         }
         super.dispatchStart()
@@ -20,7 +20,7 @@ internal class ReportFragmentManager : FragmentManager() {
     override fun dispatchStop() {
         forEachBackFragment { fragment ->
             if (fragment.mState == Fragment.STARTED) {
-                fragment.mState = Fragment.ACTIVITY_CREATED
+                setFragmentState(this, fragment, Fragment.ACTIVITY_CREATED)
             }
         }
         super.dispatchStop()

@@ -14,3 +14,19 @@ internal fun Fragment.setView(view: View) {
     ViewTreeSavedStateRegistryOwner.set(view, viewLifecycleOwner as SavedStateRegistryOwner)
     mView = view
 }
+
+internal fun setFragmentState(fragmentManager: FragmentManager, fragment: Fragment, state: Int) {
+    fragment.mState = state
+    fragmentManager.getFragmentStateManager(fragment)?.setFragmentManagerState(state)
+}
+
+internal fun moveFragmentState(fragmentManager: FragmentManager, fragment: Fragment, state: Int) {
+    fragmentManager.getFragmentStateManager(fragment)?.let {
+        it.setFragmentManagerState(state)
+        it.moveToExpectedState()
+    }
+}
+
+private fun FragmentManager.getFragmentStateManager(fragment: Fragment): FragmentStateManager? {
+    return fragmentStore.getFragmentStateManager(fragment.mWho)
+}
