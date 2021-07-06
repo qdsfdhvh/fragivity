@@ -15,7 +15,6 @@ import com.github.fragivity.example.communicate.CommFragment
 import com.github.fragivity.example.databinding.FragmentHomeBinding
 import com.github.fragivity.example.deeplink.sendNotification
 import com.github.fragivity.example.dialog.DialogFragment
-import com.github.fragivity.example.flow.ui.MainActivity
 import com.github.fragivity.example.launchmode.LaunchModeFragment
 import com.github.fragivity.example.listscreen.Leaderboard
 import com.github.fragivity.example.nested.NestedFragment
@@ -97,8 +96,22 @@ class HomeFragment : AbsBaseFragment(false) {
             }
         }
 
+        binding.btnMultiBack.setOnClickListener {
+            startActivity(
+                Intent(
+                    requireActivity(),
+                    com.github.fragivity.example.multiback.MainActivity::class.java
+                )
+            )
+        }
+
         binding.btnGoToFlow.setOnClickListener {
-            startActivity(Intent(requireContext(), MainActivity::class.java))
+            startActivity(
+                Intent(
+                    requireActivity(),
+                    com.github.fragivity.example.flow.ui.MainActivity::class.java
+                )
+            )
         }
     }
 

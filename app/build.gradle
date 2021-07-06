@@ -56,6 +56,7 @@ dependencies {
 
     implementation project(':component:base')
     implementation project(':component:ac-flow')
+    implementation project(':component:multi-back')
 
     implementation "androidx.multidex:multidex:2.0.1"
 
