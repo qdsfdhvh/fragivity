@@ -40,29 +40,20 @@ internal operator fun Bundle?.plus(optionArgs: Bundle?): Bundle? {
     }
 }
 
-@JvmSynthetic
-internal operator fun Fragment.plusAssign(newBundle: Bundle?) {
-    if (newBundle == null) {
-        return
-    }
-
-    val oldArgs: Bundle? = this.arguments
-    if (oldArgs == null) {
-        this.arguments = newBundle
-        return
-    }
-
-    oldArgs.putAll(newBundle)
-}
-
-@JvmSynthetic
-internal fun ArrayDeque<Int>.replaceAll(array: IntArray?) {
-    if (array == null) return
-    clear()
-    for (value in array) {
-        add(value)
-    }
-}
+//@JvmSynthetic
+//internal operator fun Fragment.plusAssign(newBundle: Bundle?) {
+//    if (newBundle == null) {
+//        return
+//    }
+//
+//    val oldArgs: Bundle? = this.arguments
+//    if (oldArgs == null) {
+//        this.arguments = newBundle
+//        return
+//    }
+//
+//    oldArgs.putAll(newBundle)
+//}
 
 internal fun <T : Fragment> findFragment(
     manager: FragmentManager,

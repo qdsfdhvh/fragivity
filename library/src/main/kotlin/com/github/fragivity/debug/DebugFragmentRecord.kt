@@ -2,6 +2,7 @@ package com.github.fragivity.debug
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.openActiveFragments
 
 internal data class DebugFragmentRecord(
     val fragmentName: CharSequence,
@@ -9,9 +10,9 @@ internal data class DebugFragmentRecord(
 )
 
 internal fun FragmentActivity.getFragmentRecords(
-    predicate: (Fragment) -> Boolean = { true }
+    predicate: (Fragment?) -> Boolean = { true }
 ): List<DebugFragmentRecord> {
-    val fragmentList = supportFragmentManager.fragments
+    val fragmentList = supportFragmentManager.openActiveFragments
     if (fragmentList.isNullOrEmpty()) return emptyList()
 
     val fragmentRecordList = mutableListOf<DebugFragmentRecord>()
@@ -30,7 +31,8 @@ private fun addDebugFragmentRecord(
 ) {
     if (fragment == null) return
 
-    val name = fragment::class.java.simpleName
+    val name = "${fragment::class.java.simpleName}@" +
+        System.identityHashCode(fragment).toString(16)
     fragmentRecords.add(DebugFragmentRecord(name, getChildFragmentRecords(fragment, predicate)))
 }
 
@@ -41,7 +43,7 @@ private fun getChildFragmentRecords(
     // java.lang.IllegalStateException: Fragment .. has not been attached yet.
     if (!parentFragment.isAdded) return emptyList()
 
-    val fragmentList = parentFragment.childFragmentManager.fragments
+    val fragmentList = parentFragment.childFragmentManager.openActiveFragments
     if (fragmentList.isNullOrEmpty()) return emptyList()
 
     val fragmentRecordList = mutableListOf<DebugFragmentRecord>()

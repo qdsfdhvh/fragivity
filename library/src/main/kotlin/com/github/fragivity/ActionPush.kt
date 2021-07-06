@@ -106,9 +106,9 @@ private fun FragivityNavHost.pushInternal(
     // fix https://github.com/vitaviva/fragivity/issues/31
     // popSelf为true时， mFragmentManager.mBackStack需要与NavController.mBackStack同步更新，
     //  mFragmentManager在Navigator中会处理，NavController需要在此处处理，先删除当前Destination
-    if (navOptions.popSelf) {
-        navController.removeLastBackStackEntry()
-    }
+//    if (navOptions.popSelf) {
+//        navController.removeLastBackStackEntry()
+//    }
 
     when (navOptions.launchMode) {
         LaunchMode.STANDARD,
@@ -122,17 +122,17 @@ private fun FragivityNavHost.pushInternal(
         }
         LaunchMode.SINGLE_TASK -> {
             // curr == target || try pop to target
-            if (currentDestination?.id == node.id || popBackStack(node.id, false)) {
-                val navigator: Navigator<out NavDestination> =
-                    navigatorProvider.getNavigator(node.navigatorName)
-                if (navigator is FragivityFragmentNavigator) {
-                    navigator.restoreTopFragment(
-                        node.id,
-                        navOptions.toBundle() + matchingArgs
-                    )
-                }
-                return@with
-            }
+//            if (currentDestination?.id == node.id || popBackStack(node.id, false)) {
+//                val navigator: Navigator<out NavDestination> =
+//                    navigatorProvider.getNavigator(node.navigatorName)
+//                if (navigator is FragivityFragmentNavigator) {
+//                    navigator.restoreTopFragment(
+//                        node.id,
+//                        navOptions.toBundle() + matchingArgs
+//                    )
+//                }
+//                return@with
+//            }
 
             // create target
             navigate(

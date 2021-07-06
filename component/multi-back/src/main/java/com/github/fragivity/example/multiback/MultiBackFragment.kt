@@ -19,9 +19,11 @@ package com.github.fragivity.example.multiback
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
+import androidx.fragment.app.Fragment
 import androidx.navigation.ActivityNavigator
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -37,16 +39,15 @@ import java.lang.ref.WeakReference
 /**
  * An activity that inflates a layout that has a [BottomNavigationView].
  */
-class MainActivity : AppCompatActivity() {
+class MultiBackFragment : Fragment(R.layout.activity_main) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val navHostFragment = findNavHostFragment(R.id.nav_host_container)!!
         val navController = navHostFragment.navController
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNavigationView.setOnItemSelectedListener { item ->
             onNavDestinationSelected(item, navController)
         }
@@ -59,12 +60,12 @@ class MainActivity : AppCompatActivity() {
                 destination: NavDestination,
                 arguments: Bundle?
             ) {
-                val view = weakReference.get()
-                if (view == null) {
+                val navigationView = weakReference.get()
+                if (navigationView == null) {
                     navController.removeOnDestinationChangedListener(this)
                     return
                 }
-                view.menu.forEach { item ->
+                navigationView.menu.forEach { item ->
                     if (destination.matchDestination(item.itemId)) {
                         item.isChecked = true
                     }
@@ -93,4 +94,8 @@ class MainActivity : AppCompatActivity() {
 
     fun NavDestination.matchDestination(@IdRes destId: Int): Boolean =
         hierarchy.any { it.id == destId }
+
+    companion object {
+        fun newInstance() = MultiBackFragment()
+    }
 }

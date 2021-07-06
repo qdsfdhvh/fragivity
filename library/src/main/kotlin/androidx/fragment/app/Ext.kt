@@ -30,3 +30,6 @@ internal fun moveFragmentState(fragmentManager: FragmentManager, fragment: Fragm
 private fun FragmentManager.getFragmentStateManager(fragment: Fragment): FragmentStateManager? {
     return fragmentStore.getFragmentStateManager(fragment.mWho)
 }
+
+internal val FragmentManager.openActiveFragments: List<Fragment>
+    get() = activeFragments

@@ -9,9 +9,9 @@ import androidx.fragment.app.FragmentManager
 
 class DebugViewDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val debugViewFragmentName = javaClass.simpleName
+        val debugViewFragmentName = this::class.java.simpleName
         val fragmentRecords = requireActivity().getFragmentRecords {
-            debugViewFragmentName != it.javaClass.simpleName
+            it != null && debugViewFragmentName != it::class.java.simpleName
         }
 
         val container = DebugHierarchyViewContainer(requireContext()).apply {

@@ -39,6 +39,9 @@ interface NavOptions {
 
     @set:JvmSynthetic
     var sharedElements: Map<View, String>
+
+//    @set:JvmSynthetic
+//    var restoreState: Boolean
 }
 
 @JvmSynthetic
@@ -50,14 +53,14 @@ internal fun NavOptions.toBundle() =
 @JvmSynthetic
 internal fun NavOptions.totOptions(destinationId: Int? = null) =
     NavigationOptionsBuilder().apply {
+        setLaunchSingleTop(launchMode == LaunchMode.SINGLE_TOP)
+        if (destinationId != null && launchMode == LaunchMode.SINGLE_TASK) {
+            setPopUpTo(destinationId, true)
+        }
         setEnterAnim(enterAnim)
         setExitAnim(exitAnim)
         setPopEnterAnim(popEnterAnim)
         setPopExitAnim(popExitAnim)
-        setLaunchSingleTop(launchMode == LaunchMode.SINGLE_TOP)
-        if (launchMode == LaunchMode.SINGLE_TASK && destinationId != null) {
-            setPopUpTo(destinationId, true)
-        }
     }.build()
 
 @JvmSynthetic
