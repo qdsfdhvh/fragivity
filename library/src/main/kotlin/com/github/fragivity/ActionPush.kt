@@ -6,20 +6,19 @@ package com.github.fragivity
 import android.os.Bundle
 import androidx.core.net.toUri
 import androidx.fragment.app.FragivityFragmentDestination
-import androidx.fragment.app.FragivityFragmentNavigator
 import androidx.fragment.app.Fragment
 import androidx.navigation.*
 import androidx.navigation.fragment.FragmentNavigator
 import kotlin.reflect.KClass
 
 @JvmSynthetic
-fun FragivityNavHost.push(route: String, optionsBuilder: NavOptions.() -> Unit = {}) {
-    push(route, navOptions(optionsBuilder))
+fun FragivityNavHost.push(deepRoute: String, optionsBuilder: NavOptions.() -> Unit = {}) {
+    push(deepRoute, navOptions(optionsBuilder))
 }
 
 @JvmSynthetic
-fun FragivityNavHost.push(route: String, navOptions: NavOptions?) {
-    val request = NavDeepLinkRequest.Builder.fromUri(createRoute(route).toUri()).build()
+fun FragivityNavHost.push(deepRoute: String, navOptions: NavOptions?) {
+    val request = NavDeepLinkRequest.Builder.fromUri(createDeepRoute(deepRoute).toUri()).build()
     val (node, matchingArgs) = navController.findDestinationAndArgs(request) ?: return
     pushInternal(node, navOptions, matchingArgs)
 }
@@ -28,18 +27,12 @@ fun FragivityNavHost.push(route: String, navOptions: NavOptions?) {
  * Navigates to fragment of [clazz] by pushing it to back stack
  */
 @JvmSynthetic
-fun FragivityNavHost.push(
-    clazz: KClass<out Fragment>,
-    optionsBuilder: NavOptions.() -> Unit = {}
-) {
+fun FragivityNavHost.push(clazz: KClass<out Fragment>, optionsBuilder: NavOptions.() -> Unit = {}) {
     push(clazz, navOptions(optionsBuilder))
 }
 
 @JvmSynthetic
-fun FragivityNavHost.push(
-    clazz: KClass<out Fragment>,
-    navOptions: NavOptions?
-) {
+fun FragivityNavHost.push(clazz: KClass<out Fragment>, navOptions: NavOptions?) {
     pushInternal(putFragment(clazz), navOptions)
 }
 
@@ -68,33 +61,34 @@ internal fun FragivityNavHost.putFragment(
     clazz: KClass<out Fragment>,
     factory: ((Bundle) -> Fragment)? = null
 ): FragmentNavigator.Destination {
-    val destId = clazz.positiveHashCode
+    val route = createRoute(clazz)
+
     val graph = navController.graph
-    var destination = graph.findNode(destId) as? FragmentNavigator.Destination
-    if (destination == null) {
-        destination = if (factory != null) {
-            navController.createNavDestination(destId, factory)
+    var node = graph.findNode(route) as? FragmentNavigator.Destination
+    if (node == null) {
+        node = if (factory != null) {
+            navController.createNavDestination(route, factory)
         } else {
-            navController.createNavDestination(destId, clazz)
+            navController.createNavDestination(route, clazz)
         }
-        graph += destination
-        saveDestination(destination)
-        return destination
+        graph += node
+        saveDestination(node)
+        return node
     }
     // check destination is valid
     if (factory != null) {
-        if (destination is FragivityFragmentDestination) {
-            destination.factory = factory
-            return destination
+        if (node is FragivityFragmentDestination) {
+            node.factory = factory
+            return node
         }
     } else {
-        if (destination !is FragivityFragmentDestination) {
-            return destination
+        if (node !is FragivityFragmentDestination) {
+            return node
         }
     }
     // rebuild destination
-    graph -= destination
-    removeDestination(destId)
+    graph -= node
+    removeDestination(node)
     return putFragment(clazz, factory)
 }
 

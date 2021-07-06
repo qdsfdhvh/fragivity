@@ -22,17 +22,17 @@ fun FragivityNavHost.pop(): Boolean {
  */
 @JvmSynthetic
 fun FragivityNavHost.popTo(clazz: KClass<out Fragment>, inclusive: Boolean = false): Boolean {
-    return navController.popBackStack(clazz.positiveHashCode, inclusive)
+    return navController.popBackStack(createRoute(clazz), inclusive)
 }
 
 /**
- * Pop back stack to [route]
+ * Pop back stack to [deepRoute]
  * WARN: currentRoute should not same as route
  */
 @JvmSynthetic
-fun FragivityNavHost.popTo(route: String, inclusive: Boolean = false): Boolean {
+fun FragivityNavHost.popTo(deepRoute: String, inclusive: Boolean = false): Boolean {
     return navController.popBackStack(
-        NavDeepLinkRequest.Builder.fromUri(createRoute(route).toUri()).build(),
+        NavDeepLinkRequest.Builder.fromUri(createDeepRoute(deepRoute).toUri()).build(),
         inclusive
     )
 }

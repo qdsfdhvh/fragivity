@@ -29,20 +29,18 @@ object Fragivity {
     @JvmStatic
     fun <T : Fragment> loadRoot(
         navHost: NavHostFragment,
-        fragmentClazz: Class<T>,
         factory: Function<Bundle, T>
     ) {
-        navHost.loadRoot(fragmentClazz.kotlin) { factory.apply(it) }
+        navHost.loadRoot { factory.apply(it) }
     }
 
     @JvmStatic
     fun <T : Fragment> loadRoot(
         navHost: NavHostFragment,
         route: String,
-        fragmentClazz: Class<T>,
         factory: Function<Bundle, T>
     ) {
-        navHost.loadRoot(route, fragmentClazz.kotlin) { factory.apply(it) }
+        navHost.loadRoot(route) { factory.apply(it) }
     }
 
     @JvmStatic

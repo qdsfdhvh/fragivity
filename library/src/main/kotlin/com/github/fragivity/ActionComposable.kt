@@ -10,40 +10,39 @@ import androidx.navigation.fragment.NavHostFragment
 
 @JvmSynthetic
 fun NavHostFragment.composable(
-    route: String,
+    deepRoute: String,
     argument: NamedNavArgument,
     factory: (Bundle) -> Fragment
 ) {
-    composable(route, listOf(argument), factory)
+    composable(deepRoute, listOf(argument), factory)
 }
 
 @JvmSynthetic
 fun NavHostFragment.composable(
-    route: String,
+    deepRoute: String,
     arguments: List<NamedNavArgument> = emptyList(),
     factory: (Bundle) -> Fragment
 ) {
-    composableInternal(route, route.positiveHashCode, arguments, factory)
+    composableInternal(deepRoute, arguments, factory)
 }
 
 private fun NavHostFragment.composableInternal(
-    route: String,
-    destinationId: Int,
+    deepRoute: String,
     arguments: List<NamedNavArgument>,
     factory: (Bundle) -> Fragment
 ) = with(navController) {
-    val internalRoute = createRoute(route)
+    val route = deepRoute // = id
 
-    var node = graph.findNode(destinationId)
+    var node = graph.findNode(route)
     if (node is FragivityFragmentDestination) {
         node.factory = factory
     } else {
-        node = createNavDestination(destinationId, factory)
+        node = createNavDestination(route, factory)
         graph.addDestination(node)
     }
 
     node.apply {
-        addDeepLink(internalRoute)
+        addDeepLink(createDeepRoute(deepRoute))
         arguments.forEach { (argumentName, argument) ->
             addArgument(argumentName, argument)
         }
