@@ -24,6 +24,8 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.fragivity.example.multiback.R
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 
 
 /**
@@ -37,7 +39,8 @@ class Register : Fragment() {
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
         view.findViewById<Button>(R.id.signup_btn).setOnClickListener {
-            findNavController().navigate(R.id.action_register_to_registered)
+//            findNavController().navigate(R.id.action_register_to_registered)
+            navigator.push { Registered() }
         }
         return view
     }

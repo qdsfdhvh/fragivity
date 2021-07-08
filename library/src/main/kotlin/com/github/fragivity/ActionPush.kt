@@ -5,7 +5,6 @@ package com.github.fragivity
 
 import android.os.Bundle
 import androidx.core.net.toUri
-import androidx.fragment.app.FragivityFragmentDestination
 import androidx.fragment.app.Fragment
 import androidx.navigation.*
 import androidx.navigation.fragment.FragmentNavigator
@@ -18,7 +17,7 @@ fun FragivityNavHost.push(deepRoute: String, optionsBuilder: NavOptions.() -> Un
 
 @JvmSynthetic
 fun FragivityNavHost.push(deepRoute: String, navOptions: NavOptions?) {
-    val request = NavDeepLinkRequest.Builder.fromUri(createDeepRoute(deepRoute).toUri()).build()
+    val request = NavDeepLinkRequest.Builder.fromUri(wrapDeepRoute(deepRoute).toUri()).build()
     val (node, matchingArgs) = navController.findDestinationAndArgs(request) ?: return
     pushInternal(node, navOptions, matchingArgs)
 }
@@ -61,35 +60,22 @@ internal fun FragivityNavHost.putFragment(
     clazz: KClass<out Fragment>,
     factory: ((Bundle) -> Fragment)? = null
 ): FragmentNavigator.Destination {
-    val route = createRoute(clazz)
-
     val graph = navController.graph
+
+    val route = createRoute(clazz)
     var node = graph.findNode(route) as? FragmentNavigator.Destination
-    if (node == null) {
-        node = if (factory != null) {
-            navController.createNavDestination(route, factory)
-        } else {
-            navController.createNavDestination(route, clazz)
-        }
-        graph += node
-        saveDestination(node)
-        return node
+    if (node != null) {
+        graph -= node
+        removeDestination(node)
     }
-    // check destination is valid
-    if (factory != null) {
-        if (node is FragivityFragmentDestination) {
-            node.factory = factory
-            return node
-        }
+    node = if (factory != null) {
+        navController.createNavDestination(route, factory)
     } else {
-        if (node !is FragivityFragmentDestination) {
-            return node
-        }
+        navController.createNavDestination(route, clazz)
     }
-    // rebuild destination
-    graph -= node
-    removeDestination(node)
-    return putFragment(clazz, factory)
+    graph += node
+    saveDestination(node)
+    return node
 }
 
 @JvmSynthetic

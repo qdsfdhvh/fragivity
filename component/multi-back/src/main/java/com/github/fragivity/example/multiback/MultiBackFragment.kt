@@ -17,22 +17,16 @@
 package com.github.fragivity.example.multiback
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
-import androidx.navigation.ActivityNavigator
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
-import com.github.fragivity.findNavHostFragment
+import com.github.fragivity.*
+import com.github.fragivity.example.multiback.formscreen.Register
+import com.github.fragivity.example.multiback.homescreen.Title
+import com.github.fragivity.example.multiback.listscreen.Leaderboard
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.lang.ref.WeakReference
 
@@ -44,12 +38,28 @@ class MultiBackFragment : Fragment(R.layout.activity_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val navHostFragment = findNavHostFragment(R.id.nav_host_container)!!
+        val navHostFragment = findOrCreateNavHostFragment(R.id.nav_host_container)
         val navController = navHostFragment.navController
+
+//        navHostFragment.loadRoot()
+
+        val array = arrayOf<Pair<String, (Bundle) -> Fragment>>(
+            "home" to { Title() },
+            "list" to { Leaderboard() },
+            "form" to { Register() }
+        )
+        navHostFragment.loadMultiRoot(0, *array)
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNavigationView.setOnItemSelectedListener { item ->
-            onNavDestinationSelected(item, navController)
+            val route = when (item.itemId) {
+                R.id.home -> 0
+                R.id.list -> 1
+                R.id.form -> 2
+                else -> return@setOnItemSelectedListener false
+            }
+            navController.pushTo(route)
+//            onNavDestinationSelected(item, navController)
         }
 
         val weakReference = WeakReference(bottomNavigationView)
@@ -65,8 +75,10 @@ class MultiBackFragment : Fragment(R.layout.activity_main) {
                     navController.removeOnDestinationChangedListener(this)
                     return
                 }
+
                 navigationView.menu.forEach { item ->
-                    if (destination.matchDestination(item.itemId)) {
+                    val route = getRoute(item.itemId) ?: return@forEach
+                    if (destination.matchDestination(route)) {
                         item.isChecked = true
                     }
                 }
@@ -74,26 +86,33 @@ class MultiBackFragment : Fragment(R.layout.activity_main) {
         })
     }
 
-    private fun onNavDestinationSelected(item: MenuItem, navController: NavController): Boolean {
-        val builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
-        if (item.order and Menu.CATEGORY_SECONDARY == 0) {
-            builder.setPopUpTo(
-                navController.graph.findStartDestination().id,
-                inclusive = false,
-                saveState = true
-            )
-        }
-        val options = builder.build()
-        return try {
-            navController.navigate(item.itemId, null, options)
-            true
-        } catch (e: IllegalArgumentException) {
-            false
-        }
+    private fun getRoute(id: Int) = when (id) {
+        R.id.home -> "home"
+        R.id.list -> "list"
+        R.id.form -> "form"
+        else -> null
     }
 
-    fun NavDestination.matchDestination(@IdRes destId: Int): Boolean =
-        hierarchy.any { it.id == destId }
+//    private fun onNavDestinationSelected(item: MenuItem, navController: NavController): Boolean {
+//        val builder = NavOptions.Builder().setLaunchSingleTop(true).setRestoreState(true)
+//        if (item.order and Menu.CATEGORY_SECONDARY == 0) {
+//            builder.setPopUpTo(
+//                navController.graph.findStartDestination().id,
+//                inclusive = false,
+//                saveState = true
+//            )
+//        }
+//        val options = builder.build()
+//        return try {
+//            navController.navigate(item.itemId, null, options)
+//            true
+//        } catch (e: IllegalArgumentException) {
+//            false
+//        }
+//    }
+
+//    fun NavDestination.matchDestination(@IdRes destId: Int): Boolean =
+//        hierarchy.any { it.id == destId }
 
     companion object {
         fun newInstance() = MultiBackFragment()

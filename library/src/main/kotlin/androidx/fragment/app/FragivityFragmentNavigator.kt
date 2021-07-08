@@ -4,10 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentTransaction.OP_ADD
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigator
@@ -66,17 +63,17 @@ class FragivityFragmentNavigator(
         if (split.size != 2) {
             throw IllegalStateException(
                 "Invalid back stack entry on the "
-                    + "NavHostFragment's back stack - use getChildFragmentManager() "
-                    + "if you need to do custom FragmentTransactions from within "
-                    + "Fragments created via your navigation graph."
+                        + "NavHostFragment's back stack - use getChildFragmentManager() "
+                        + "if you need to do custom FragmentTransactions from within "
+                        + "Fragments created via your navigation graph."
             )
         }
         return split[1].toIntOrNull()
             ?: throw java.lang.IllegalStateException(
                 "Invalid back stack entry on the "
-                    + "NavHostFragment's back stack - use getChildFragmentManager() "
-                    + "if you need to do custom FragmentTransactions from within "
-                    + "Fragments created via your navigation graph."
+                        + "NavHostFragment's back stack - use getChildFragmentManager() "
+                        + "if you need to do custom FragmentTransactions from within "
+                        + "Fragments created via your navigation graph."
             )
     }
 
@@ -193,10 +190,10 @@ class FragivityFragmentNavigator(
         val initialNavigation = backStack.isEmpty()
 
         val restoreState = (
-            navOptions != null && !initialNavigation &&
-                navOptions.shouldRestoreState() &&
-                savedIds.remove(entry.id)
-            )
+                navOptions != null && !initialNavigation &&
+                        navOptions.shouldRestoreState() &&
+                        savedIds.remove(entry.id)
+                )
         if (restoreState) {
             fragmentManager.restoreBackStack(entry.id)
             state.push(entry)
@@ -230,10 +227,10 @@ class FragivityFragmentNavigator(
         ft.setPrimaryNavigationFragment(fragment)
 
         val isSingleTopReplacement = (
-            navOptions != null && !initialNavigation &&
-                navOptions.shouldLaunchSingleTop() &&
-                backStack.last().destination.id == destId
-            )
+                navOptions != null && !initialNavigation &&
+                        navOptions.shouldLaunchSingleTop() &&
+                        backStack.last().destination.id == destId
+                )
 
         // when popsSelf == true close preFrag as SingleTop
         // see https://github.com/vitaviva/fragivity/issues/26

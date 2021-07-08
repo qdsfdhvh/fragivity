@@ -4,11 +4,10 @@
 package com.github.fragivity
 
 import android.os.Bundle
+import androidx.core.net.toUri
 import androidx.fragment.app.*
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDestination
-import androidx.navigation.NavGraph
-import androidx.navigation.createGraph
+import androidx.navigation.*
 import androidx.navigation.fragment.NavHostFragment
 import kotlin.reflect.KClass
 
@@ -40,26 +39,10 @@ private fun NavHostFragment.loadRootInternal(
     route: String,
     deepRoute: String,
     startDestinationFactory: () -> NavDestination
-) = with(navController) {
-    navigatorProvider.addNavigator(
-        FragivityFragmentNavigator(requireContext(), childFragmentManager, id)
-    )
-
-    val nodeViewModel = ViewModelProvider(
-        this@loadRootInternal,
-        defaultViewModelProviderFactory
-    ).get(FragivityNodeViewModel::class.java)
-
-    val startDestination = startDestinationFactory.invoke()
-    startDestination.addDeepLink(createDeepRoute(deepRoute))
-
-    graph = createGraph(startDestination = route) {
-        addDestination(startDestination)
-        // restore destination from vm for NavController#mBackStackToRestore
-        nodeViewModel.restoreDestination(this@with, this)
-    }
-
-    fragivityHostViewModel.setUpNavHost(nodeViewModel, this)
+) = setupGraph(route) {
+    val startDestination = startDestinationFactory()
+    startDestination.addDeepLink(wrapDeepRoute(deepRoute))
+    addDestination(startDestination)
 }
 
 /**
@@ -74,5 +57,39 @@ internal fun createRoute(clazz: KClass<out Fragment>): String = clazz.toString()
  * 当前真正用于路由跳转的route。
  */
 @JvmSynthetic
-internal fun createDeepRoute(route: String): String =
+internal fun wrapDeepRoute(route: String): String =
     "android-app://androidx.navigation.fragivity/$route"
+
+@JvmSynthetic
+internal fun String.toRequest() =
+    NavDeepLinkRequest.Builder.fromUri(wrapDeepRoute(this).toUri()).build()
+
+@JvmSynthetic
+internal fun NavHostFragment.setupGraph(
+    startRoute: String,
+    graphBuilder: NavGraphBuilder.() -> Unit
+) {
+    addFragivityNavigator()
+    val nodeViewModel = getNodeViewModel()
+    with(navController) {
+        graph = createGraph(startDestination = startRoute) {
+            graphBuilder()
+            nodeViewModel.restoreDestination(this@with, this)
+        }
+        fragivityHostViewModel.setUpNavHost(nodeViewModel, this)
+    }
+}
+
+@JvmSynthetic
+private fun NavHostFragment.addFragivityNavigator() {
+    navController.navigatorProvider.addNavigator(
+        FragivityFragmentNavigator(requireContext(), childFragmentManager, id)
+    )
+}
+
+@JvmSynthetic
+private fun NavHostFragment.getNodeViewModel(): FragivityNodeViewModel {
+    return ViewModelProvider(this, defaultViewModelProviderFactory)
+        .get(FragivityNodeViewModel::class.java)
+}
+

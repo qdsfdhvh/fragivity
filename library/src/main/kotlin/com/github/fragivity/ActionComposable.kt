@@ -42,7 +42,7 @@ private fun NavHostFragment.composableInternal(
     }
 
     node.apply {
-        addDeepLink(createDeepRoute(deepRoute))
+        addDeepLink(wrapDeepRoute(deepRoute))
         arguments.forEach { (argumentName, argument) ->
             addArgument(argumentName, argument)
         }

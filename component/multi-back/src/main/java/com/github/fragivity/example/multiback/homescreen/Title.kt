@@ -24,6 +24,8 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.fragivity.example.multiback.R
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 
 /**
  * Shows the main title screen with a button that navigates to [About].
@@ -35,7 +37,8 @@ class Title : Fragment() {
         val view = inflater.inflate(R.layout.fragment_title, container, false)
 
         view.findViewById<Button>(R.id.about_btn).setOnClickListener {
-            findNavController().navigate(R.id.action_title_to_about)
+//            findNavController().navigate(R.id.action_title_to_about)
+            navigator.push { About() }
         }
         return view
     }

@@ -27,6 +27,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fragivity.example.multiback.R
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 
 /**
  * Shows a static leaderboard with multiple users.
@@ -87,9 +89,13 @@ class MyAdapter(private val myDataset: Array<String>) :
         holder.item.setOnClickListener {
             val bundle = bundleOf(USERNAME_KEY to myDataset[position])
 
-            holder.item.findNavController().navigate(
-                    R.id.action_leaderboard_to_userProfile,
-                bundle)
+//            holder.item.findNavController().navigate(
+//                    R.id.action_leaderboard_to_userProfile,
+//                bundle)
+
+            holder.item.navigator.push({
+                arguments = bundle
+            }) { UserProfile() }
         }
     }
 
