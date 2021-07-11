@@ -43,7 +43,7 @@
 
     <include
         android:id="@+id/include_avatar_picker"
-        layout="@layout/layout_picker"
+        layout="@layout/multi_back_layout_picker"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginStart="34dp"

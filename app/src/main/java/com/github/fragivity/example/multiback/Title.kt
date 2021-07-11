@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package com.github.fragivity.example.multiback.formscreen
+package com.github.fragivity.example.multiback
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
-import com.github.fragivity.example.multiback.R
+import com.github.fragivity.example.R
+import com.github.fragivity.navigator
+import com.github.fragivity.push
 
 /**
- * Shows "Done".
+ * Shows the main title screen with a button that navigates to [About].
  */
-class Registered : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-
-        return inflater.inflate(R.layout.fragment_registered, container, false)
+class Title : Fragment(R.layout.multi_back_fragment_title) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.findViewById<Button>(R.id.about_btn).setOnClickListener {
+            navigator.push { About() }
+        }
     }
 }
+
+class About : Fragment(R.layout.multi_back_fragment_about)
+

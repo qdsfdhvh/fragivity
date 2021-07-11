@@ -14,32 +14,26 @@
  * limitations under the License.
  */
 
-package com.github.fragivity.example.multiback.homescreen
+package com.github.fragivity.example.multiback
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.github.fragivity.example.multiback.R
+import com.github.fragivity.example.R
 import com.github.fragivity.navigator
 import com.github.fragivity.push
 
 /**
- * Shows the main title screen with a button that navigates to [About].
+ * Shows a register form to showcase UI state persistence. It has a button that goes to [Registered]
  */
-class Title : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_title, container, false)
-
-        view.findViewById<Button>(R.id.about_btn).setOnClickListener {
-//            findNavController().navigate(R.id.action_title_to_about)
-            navigator.push { About() }
+class Register : Fragment(R.layout.multi_back_fragment_register) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.findViewById<Button>(R.id.signup_btn).setOnClickListener {
+            navigator.push { Registered() }
         }
-        return view
     }
 }
+
+class Registered : Fragment(R.layout.multi_back_fragment_registered)

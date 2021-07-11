@@ -4,6 +4,7 @@
 package com.github.fragivity
 
 import androidx.annotation.IdRes
+import androidx.annotation.NavigationRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.fragment.NavHostFragment
@@ -19,11 +20,11 @@ fun Fragment.findNavHostFragment(@IdRes id: Int): NavHostFragment? {
 
 fun Fragment.findOrCreateNavHostFragment(
     @IdRes id: Int,
-    isReport: Boolean = true
+    @NavigationRes graphResId: Int = 0,
 ): NavHostFragment {
     var navHostFragment = findNavHostFragment(id)
     if (navHostFragment == null) {
-        navHostFragment = childFragmentManager.createNavHostFragment(id, isReport)
+        navHostFragment = childFragmentManager.createNavHostFragment(id, graphResId)
     }
     return navHostFragment
 }

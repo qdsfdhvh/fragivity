@@ -28,4 +28,4 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:context=".listscreen.Leaderboard"
-    tools:listitem="@layout/list_view_item"/>
+    tools:listitem="@layout/multi_back_list_view_item"/>

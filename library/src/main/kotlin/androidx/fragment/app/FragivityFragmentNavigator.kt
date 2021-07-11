@@ -268,9 +268,9 @@ class FragivityFragmentNavigator(
             }
         }
 
-        if (isAdded && prevFragment != null) {
-            ft.hide(prevFragment)
-        }
+//        if (isAdded && prevFragment != null) {
+//            ft.hide(prevFragment)
+//        }
 
         if (navigatorExtras is FragmentNavigator.Extras) {
             for ((key, value) in navigatorExtras.sharedElements) {

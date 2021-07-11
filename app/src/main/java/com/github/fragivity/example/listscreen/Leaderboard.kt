@@ -39,7 +39,7 @@ class Leaderboard : AbsBaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_leaderboard, container, false)
+        val view = inflater.inflate(R.layout.multi_back_fragment_leaderboard, container, false)
 
         val viewAdapter = MyAdapter(Array(10) { "Person ${it + 1}" })
 
@@ -74,7 +74,7 @@ class MyAdapter(private val myDataset: Array<String>) :
     ): ViewHolder {
         // create a new view
         val itemView = LayoutInflater.from(parent.context).inflate(
-            R.layout.list_view_item, parent, false
+            R.layout.multi_back_list_view_item, parent, false
         )
         return ViewHolder(itemView)
     }

@@ -15,25 +15,16 @@
   ~ limitations under the License.
   -->
 
-<navigation
+<androidx.recyclerview.widget.RecyclerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/form"
-    app:startDestination="@id/register">
-
-    <fragment
-            android:id="@+id/register"
-            android:name="com.github.fragivity.example.multiback.formscreen.Register"
-            android:label="@string/title_register"
-            tools:layout="@layout/fragment_register">
-        <action
-            android:id="@+id/action_register_to_registered"
-            app:destination="@id/registered"/>
-    </fragment>
-    <fragment
-        android:id="@+id/registered"
-        android:name="com.github.fragivity.example.multiback.formscreen.Registered"
-        android:label="Registered"
-        tools:layout="@layout/fragment_registered"/>
-</navigation>
+    android:id="@+id/leaderboard_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:listitem="@layout/multi_back_list_view_item"/>

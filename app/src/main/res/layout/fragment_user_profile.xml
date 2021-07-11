@@ -71,7 +71,7 @@
         app:layout_constraintTop_toTopOf="@+id/user_data_card" />
 
     <include
-        layout="@layout/user_card"
+        layout="@layout/multi_back_user_card"
         android:layout_width="0dp"
         android:layout_height="120dp"
         android:layout_marginStart="16dp"

@@ -8,12 +8,12 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.annotation.NavigationRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commitNow
-import androidx.fragment.app.setupReportFragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import kotlin.reflect.KClass
 
@@ -80,12 +80,10 @@ internal fun <T : Fragment> findFragment(
 
 @JvmSynthetic
 internal fun FragmentManager.createNavHostFragment(
-    @IdRes id: Int, isReport: Boolean
+    @IdRes id: Int,
+    @NavigationRes graphResId: Int = 0,
 ): NavHostFragment {
-    val navHostFragment = NavHostFragment.create(0)
-    if (isReport) {
-        navHostFragment.setupReportFragmentManager()
-    }
+    val navHostFragment = NavHostFragment.create(graphResId)
     commitNow(true) {
         setReorderingAllowed(true)
         add(id, navHostFragment)

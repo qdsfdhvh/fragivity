@@ -46,7 +46,7 @@ class UserProfile : AbsBaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_user_profile, container, false)
+        val view = inflater.inflate(R.layout.multi_back_fragment_user_profile, container, false)
         val name = arguments?.getString(USERNAME_KEY) ?: resources.getString(R.string.profile_name_1)
         view.findViewById<TextView>(R.id.profile_user_name).text = name
         return view

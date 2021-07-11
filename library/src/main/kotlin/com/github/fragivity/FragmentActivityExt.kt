@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.annotation.NavigationRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
@@ -24,11 +25,11 @@ fun FragmentActivity.findNavHostFragment(@IdRes id: Int): NavHostFragment? {
 
 fun FragmentActivity.findOrCreateNavHostFragment(
     @IdRes id: Int,
-    isReport: Boolean = true
+    @NavigationRes graphResId: Int = 0,
 ): NavHostFragment {
     var navHostFragment = findNavHostFragment(id)
     if (navHostFragment == null) {
-        navHostFragment = supportFragmentManager.createNavHostFragment(id, isReport)
+        navHostFragment = supportFragmentManager.createNavHostFragment(id, graphResId)
     }
     return navHostFragment
 }
